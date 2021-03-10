@@ -5,6 +5,7 @@
 ## Select EC2 Instance Type
 * Based on memory requirements and compute requirements, select EC2 instance
 * Currently using r5n.8xlarge for the 200 GB RAM
+* [Instance Type List](https://instances.vantage.sh/)
 ## Setup EC2 Instance to run Jupyter Server 
 
 ### Create AWS IAM Role
