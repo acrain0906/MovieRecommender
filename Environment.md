@@ -1,4 +1,4 @@
-# Recommender System  
+# AWS Backed Jupyter Server with CloudWatch Monitoring  
 ## Clarify/Design Requirements (memory, speed)
 * Drop movies or users with low interactions, -> what to do with new users/movies?
 * size of user-item matrx, time and space requirement for matrix factorization/KNN 
@@ -8,17 +8,11 @@
 ## Setup EC2 Instance to run Jupyter Server 
 
 ### Create AWS IAM Role
-This IAM Role will be used to grant a user access to the Cloudwatch logs.  
-
+This IAM Role will be used to grant a user access to the Cloudwatch logs.  Add this role to the Instance when creating the EC2 instance.  
 * https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-iam-roles-for-cloudwatch-agent-commandline.html
-
-Add this role to the Instance under the ___ stage when creating the EC2 instance.  
 
 ### Setup EC2 Security Groups for Jupyter
 ![Security Groups for EC2](https://dataschool.com/assets/images/data-modeling-101/jupyter_article/securityGroups.png)
-
-## Setup EC2 Security Groups for CloudWatch
-
 
 ### Install CloudWatch Monitoring
 Following:
@@ -35,15 +29,16 @@ sudo yum install amazon-cloudwatch-agent
 ```
 cp amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+echo "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json" >> ~/.bashrc
 ```
 
 ### Install Anaconda on EC2 
 
 ```
-$ wget https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
-$ bash Anaconda3-2019.03-Linux-x86_64.sh
-$ echo "export PATH=/home/ec2-user/anaconda3/bin:$PATH" >> ~/.bashrc
-$ source .bashrc
+wget https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
+bash Anaconda3-2019.03-Linux-x86_64.sh
+echo "export PATH=/home/ec2-user/anaconda3/bin:$PATH" >> ~/.bashrc
+source .bashrc
 ```
 
 ### Setup Jupter Notebook Server on EC2
@@ -72,10 +67,10 @@ conf.NotebookApp.port = 8888
 ```
 Set configuration to auto-run on server start-up..
 ```
-  $ mkdir MyNotebooks
-  $ echo "conda init" >> ~/.bashrc
-  $ echo "jupyter notebook" >> ~/.bashrc
-  $ source .bashrc
+mkdir MyNotebooks
+echo "conda init" >> ~/.bashrc
+echo "jupyter notebook" >> ~/.bashrc
+source .bashrc
 ```
 ### Connect Remotely to Notebook 
 * fill-in URL to: http://<your AWS public dns>:8888/ 
