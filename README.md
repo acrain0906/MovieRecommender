@@ -6,8 +6,36 @@
 * Based on memory requirements and compute requirements, select EC2 instance
 * Currently using r5n.8xlarge for the 200 GB RAM
 ## Setup EC2 Instance to run Jupyter Server 
-### Setup EC2
+
+### Create AWS IAM Role
+This IAM Role will be used to grant a user access to the Cloudwatch logs.  
+
+* https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-iam-roles-for-cloudwatch-agent-commandline.html
+
+Add this role to the Instance under the ___ stage when creating the EC2 instance.  
+
+### Setup EC2 Security Groups for Jupyter
 ![Security Groups for EC2](https://dataschool.com/assets/images/data-modeling-101/jupyter_article/securityGroups.png)
+
+## Setup EC2 Security Groups for CloudWatch
+
+
+### Install CloudWatch Monitoring
+Following:
+* https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html
+* https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AgentReference.html#create-additional-configuration-files
+
+```
+sudo yum install amazon-cloudwatch-agent
+```
+
+### Modify CloudWatch Configuration
+* https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-Configuration-File-Details.html
+* Copy the configiration file to EC2-USER to /OPT 
+```
+cp amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json 
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+```
 
 ### Install Anaconda on EC2 
 
